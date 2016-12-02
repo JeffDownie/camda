@@ -42,10 +42,17 @@ const mapCB = R.curry((CBxy, fnyz) => {
     });
 });
 
-//ofCB :: x -> CB _ x
+//ofCB :: x -> CB y x
 const ofCB = (x) => {
-    return R.curry((_, cbx) => {
+    return R.curry((y, cbx) => {
         cbx(null, x);
+    });
+};
+
+//failCB :: err -> CB y x
+const failCB = (err) => {
+    return R.curry((y, cbx) => {
+        cbx(err);
     });
 };
 
@@ -89,14 +96,15 @@ const idCB = R.curry((x, cbx) => {
 
 module.exports = {
     cb: {
-        contraMap: contraMap,
-        divide: divide,
-        conquer: conquer
+        contraMap: contraMapcb,
+        divide: dividecb,
+        conquer: conquercb
     },
-    map: map,
-    of: of,
-    ap: ap,
-    chain: chain,
-    compose: compose,
-    id: id
+    map: mapCB,
+    of: ofCB,
+    fail: failCB,
+    ap: apCB,
+    chain: chainCB,
+    compose: composeCB,
+    id: idCB
 };

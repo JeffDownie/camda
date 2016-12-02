@@ -1,12 +1,17 @@
 {
   "name": "camda",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Functional instances for node callbacks",
+  "author": "Jeff Downie",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jeff Downie",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JeffDownie/camda"
+  },
+  "license": "MIT",
   "dependencies": {
     "ramda": "0.22.1"
   }

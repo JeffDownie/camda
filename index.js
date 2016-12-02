@@ -100,11 +100,13 @@ module.exports = {
         divide: dividecb,
         conquer: conquercb
     },
-    map: mapCB,
-    of: ofCB,
-    fail: failCB,
-    ap: apCB,
-    chain: chainCB,
-    compose: composeCB,
-    id: idCB
+    CB: {
+        map: mapCB,
+        of: ofCB,
+        fail: failCB,
+        ap: apCB,
+        chain: chainCB,
+        compose: composeCB,
+        id: idCB
+    }
 };

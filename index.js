@@ -62,18 +62,12 @@ const apCB = R.curry((CBzfnxy, CBzx) => {
     });
 });
 
-//chainCB :: CB z x -> CB z (x -> CB z y) -> CB z y
-const chainCB = R.curry((CBzx, CBzfnxCBzy) => {
+//chainCB :: CB z x -> (x -> CB z y) -> CB z y
+const chainCB = R.curry((CBzx, fnxCBzy) => {
     return R.curry((z, cby) => {
         CBzx(z, (err, x) => {
             if(err) return cby(err);
-            CBzfnxCBzy(z, (err, fnxCBzy) => {
-                if(err) return cby(err);
-                fnxCBzy(x)(z, (err, y) => {
-                    if(err) return cby(err);
-                    cby(null, y);
-                });
-            });
+            fnxCBzy(x)(z, cby);
         });
     });
 });

@@ -94,6 +94,13 @@ const idCB = R.curry((x, cbx) => {
     cbx(null, x);
 });
 
+//createCB ::  (x -> y) -> CB x y
+const createCB = (fnxy) => {
+    return (x, cby) => {
+        cby(null, fnxy(x));
+    };
+};
+
 module.exports = {
     cb: {
         contraMap: contraMapcb,
@@ -107,6 +114,7 @@ module.exports = {
         ap: apCB,
         chain: chainCB,
         compose: composeCB,
-        id: idCB
+        id: idCB,
+        create: createCB
     }
 };

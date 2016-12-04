@@ -1,9 +1,10 @@
 const R = require('ramda');
+
 //cb x :: (err, x) -> IO ()
 //CB x y :: x -> (cb y) -> IO ()
 
-//contraMapcb :: cb x -> (y -> x) -> cb y
-const contraMapcb = R.curry((cbx, fnyx) => {
+//contraMapcb :: (y -> x) -> cb x -> cb y
+const contraMapcb = R.curry((fnyx, cbx) => {
     return (err, y) => {
         if(err) return cbx(err);
         return cbx(null, fnyx(y));
@@ -32,8 +33,8 @@ const conquercb = (fnx) => {
     };
 };
 
-//mapCB :: CB x y -> (y -> z) -> CB x z
-const mapCB = R.curry((CBxy, fnyz) => {
+//mapCB :: (y -> z) -> CB x y -> CB x z
+const mapCB = R.curry((fnyz, CBxy) => {
     return R.curry((x, cbz) => {
         CBxy(x, (err, y) => {
             if(err) return cbz(err);
@@ -69,8 +70,8 @@ const apCB = R.curry((CBzfnxy, CBzx) => {
     });
 });
 
-//chainCB :: CB z x -> (x -> CB z y) -> CB z y
-const chainCB = R.curry((CBzx, fnxCBzy) => {
+//chainCB :: (x -> CB z y) -> CB z x -> CB z y
+const chainCB = R.curry((fnxCBzy, CBzx) => {
     return R.curry((z, cby) => {
         CBzx(z, (err, x) => {
             if(err) return cby(err);

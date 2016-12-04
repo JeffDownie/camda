@@ -33,12 +33,12 @@ describe('fail', () => {
 describe('map', () => {
     it('should map over a CB function that succeeds', done => {
         const succeedCB = CB.of('success');
-        const mappedSucceed = CB.map(succeedCB, x => x + '!')
+        const mappedSucceed = CB.map(x => x + '!', succeedCB)
         mappedSucceed(123, checkcb(done, 'success!'));
     });
     it('should map over a CB function that fails', done => {
         const failCB = CB.fail('failure');
-        const mappedFail = CB.map(failCB, x => x + '!')
+        const mappedFail = CB.map(x => x + '!', failCB)
         mappedFail(123, checkErrcb(done, 'failure'));
     });
 });

@@ -61,3 +61,15 @@ describe('compose', () => {
         CB.compose(CB.create(R.inc), CB.create(R.multiply(2)))(3, checkcb(done, 8));
     });
 });
+
+describe('ap', () => {
+    it('should apply the function returned by the CB to the second CB, to create the returned CB', done => {
+        CB.ap(CB.create(R.add), CB.create(R.multiply(2)))(3, checkcb(done, 9));
+    });
+    it('should pass the error to the final CB if the function CB fails', done => {
+        CB.ap(CB.fail('fail'), CB.of(1))(123, checkErrcb(done, 'fail'));
+    });
+    it('should pass the error to the final CB if the standard CB fails', done => {
+        CB.ap(CB.create(R.add), CB.fail('fail'))(123, checkErrcb(done, 'fail'));
+    });
+});

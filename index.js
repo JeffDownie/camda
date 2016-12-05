@@ -100,10 +100,11 @@ const createCB = (fnxy) => {
 //CBify :: classic-style CB x y -> CB x y
 //Used for interoperability with fantasy-land, ramda, etc
 const CBify = (classicCB) => {
-    const CB = R.curry(classicCB);
+    const CB = R.curryN(2, classicCB);
     CB.map = fn => mapCB(fn, CB);
     CB.ap = CBfn => apCB(CBfn, CB);
     CB.chain = fnCB => chainCB(fnCB, CB);
+    CB.compose = composeCB(CB);
     return CB;
 };
 

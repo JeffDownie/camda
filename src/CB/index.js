@@ -74,6 +74,10 @@ const CBify = (classicCB) => {
     CB.ap = CBfn => apCB(CBfn, CB);
     CB.chain = fnCB => chainCB(fnCB, CB);
     CB.compose = composeCB(CB);
+		CB['fantasy-land/map'] = CB.map;
+		CB['fantasy-land/ap'] = CB.ap;
+		CB['fantasy-land/chain'] = CB.chain;
+		CB['fantasy-land/compose'] = CB.compose;
     return CB;
 };
 

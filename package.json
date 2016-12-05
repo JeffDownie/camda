@@ -3,7 +3,7 @@
   "version": "0.2.1",
   "description": "Functional instances for node callbacks",
   "author": "Jeff Downie",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "npm run lint && istanbul cover ./node_modules/.bin/_mocha",
     "lint": "eslint ."

@@ -35,7 +35,7 @@ const conquercb = (fnx) => {
 
 //mapCB :: (y -> z) -> CB x y -> CB x z
 const mapCB = R.curry((fnyz, CBxy) => {
-    return R.curry((x, cbz) => {
+    return CBify((x, cbz) => {
         CBxy(x, (err, y) => {
             if(err) return cbz(err);
             return cbz(null, fnyz(y));
@@ -45,21 +45,21 @@ const mapCB = R.curry((fnyz, CBxy) => {
 
 //ofCB :: x -> CB y x
 const ofCB = (x) => {
-    return R.curry((y, cbx) => {
+    return CBify((y, cbx) => {
         cbx(null, x);
     });
 };
 
 //failCB :: err -> CB y x
 const failCB = (err) => {
-    return R.curry((y, cbx) => {
+    return CBify((y, cbx) => {
         cbx(err);
     });
 };
 
 //apCB :: CB z (x -> y) -> CB z x -> CB z y
 const apCB = R.curry((CBzfnxy, CBzx) => {
-    return R.curry((z, cby) => {
+    return CBify((z, cby) => {
         CBzx(z, (err, x) => {
             if(err) return cby(err);
             CBzfnxy(z, (err, fnxy) => {
@@ -72,7 +72,7 @@ const apCB = R.curry((CBzfnxy, CBzx) => {
 
 //chainCB :: (x -> CB z y) -> CB z x -> CB z y
 const chainCB = R.curry((fnxCBzy, CBzx) => {
-    return R.curry((z, cby) => {
+    return CBify((z, cby) => {
         CBzx(z, (err, x) => {
             if(err) return cby(err);
             fnxCBzy(x)(z, cby);
@@ -82,7 +82,7 @@ const chainCB = R.curry((fnxCBzy, CBzx) => {
 
 //composeCB :: CB x y -> CB y z -> CB x z
 const composeCB = R.curry((CBxy, CByz) => {
-    return R.curry((x, cbz) => {
+    return CBify((x, cbz) => {
         CBxy(x, (err, y) => {
             if(err) return cbz(err);
             CByz(y, cbz);
@@ -90,17 +90,27 @@ const composeCB = R.curry((CBxy, CByz) => {
     });
 });
 
-//idCB :: CB x x
-const idCB = R.curry((x, cbx) => {
-    cbx(null, x);
-});
-
 //createCB ::  (x -> y) -> CB x y
 const createCB = (fnxy) => {
-    return (x, cby) => {
+    return CBify((x, cby) => {
         cby(null, fnxy(x));
-    };
+    });
 };
+
+//CBify :: classic-style CB x y -> CB x y
+//Used for interoperability with fantasy-land, ramda, etc
+const CBify = (classicCB) => {
+    const CB = R.curry(classicCB);
+    CB.map = fn => mapCB(fn, CB);
+    CB.ap = CBfn => apCB(CBfn, CB);
+    CB.chain = fnCB => chainCB(fnCB, CB);
+    return CB;
+};
+
+//idCB :: CB x x
+const idCB = CBify((x, cbx) => {
+    cbx(null, x);
+});
 
 module.exports = {
     cb: {
@@ -116,6 +126,7 @@ module.exports = {
         chain: chainCB,
         compose: composeCB,
         id: idCB,
-        create: createCB
+        create: createCB,
+        CBify: CBify
     }
 };

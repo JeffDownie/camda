@@ -5,3 +5,6 @@ describe('CB', () => {
 describe('cb', () => {
     require('./cb');
 });
+describe('ramda integration', () => {
+    require('./ramdaIntegration');
+});

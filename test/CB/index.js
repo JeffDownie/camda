@@ -1,3 +1,4 @@
+'use strict';
 const CB = require('../..').CB;
 const R = require('ramda');
 const assert = require('assert');
@@ -32,14 +33,13 @@ describe('fail', () => {
 
 describe('map', () => {
     it('should map over a CB function that succeeds', done => {
-        const succeedCB = CB.of('success');
-        const mappedSucceed = CB.map(x => x + '!', succeedCB);
-        mappedSucceed(123, checkcb(done, 'success!'));
+        CB.map(x => x + '!', CB.of('success'))(123, checkcb(done, 'success!'));
     });
     it('should map over a CB function that fails', done => {
-        const failCB = CB.fail('failure');
-        const mappedFail = CB.map(x => x + '!', failCB);
-        mappedFail(123, checkErrcb(done, 'failure'));
+        CB.map(x => x + '!', CB.fail('failure'))(123, checkErrcb(done, 'failure'));
+    });
+    it('should work when called as an instance method', done => {
+        CB.id.map(R.inc)(1, checkcb(done, 2));
     });
 });
 
@@ -51,14 +51,22 @@ describe('id', () => {
 
 describe('create', () => {
     it('should create a CB function from a regular function', done => {
-        const add1Async = CB.create(R.inc);
-        add1Async(5, checkcb(done, 6));
+        CB.create(R.inc)(5, checkcb(done, 6));
     });
 });
 
 describe('compose', () => {
     it('should compose the callbacks', done => {
         CB.compose(CB.create(R.inc), CB.create(R.multiply(2)))(3, checkcb(done, 8));
+    });
+    it('should pass through failures in the first CB', done => {
+        CB.compose(CB.fail('err'), CB.id)(3, checkErrcb(done, 'err'));
+    });
+    it('should pass through failures in the second CB', done => {
+        CB.compose(CB.id, CB.fail('err'))(3, checkErrcb(done, 'err'));
+    });
+    it('should work when called as an instance method', done => {
+        CB.id.compose(CB.id())(3, checkcb(done, 3));
     });
 });
 
@@ -71,5 +79,23 @@ describe('ap', () => {
     });
     it('should pass the error to the final CB if the standard CB fails', done => {
         CB.ap(CB.create(R.add), CB.fail('fail'))(123, checkErrcb(done, 'fail'));
+    });
+    it('should work when called as an instance method', done => {
+        CB.id.ap(CB.of(R.identity))(3, checkcb(done, 3));
+    });
+});
+
+describe('chain', () => {
+    it('should apply the given function to create a CB on the result from the second argument', done => {
+        CB.chain(x => CB.create(y => y + x), CB.create(x => 2 * x))(3, checkcb(done, 9));
+    });
+    it('should pass though failures in first CB', done => {
+        CB.chain(R.always(CB.fail('err')), CB.id)(2, checkErrcb(done, 'err'));
+    });
+    it('should pass though failures in second CB', done => {
+        CB.chain(CB.id, CB.fail('err'))(2, checkErrcb(done, 'err'));
+    });
+    it('should work when called as an instance method', done => {
+        CB.id.chain(x => CB.create(R.add(x)))(3, checkcb(done, 6));
     });
 });

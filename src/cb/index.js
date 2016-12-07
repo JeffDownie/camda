@@ -1,3 +1,4 @@
+'use strict';
 const R = require('ramda');
 
 //cb x :: (err, x) -> IO ()
@@ -24,16 +25,13 @@ const dividecb = R.curry((fnxyz, cby, cbz) => {
     };
 });
 
-//conquercb :: (x -> ()) -> cb x
-const conquercb = (fnx) => {
-    return (err, x) => {
-        if(err) return;
-        fnx(x);
-    };
-};
+//conquercb, idcb :: cb x
+const idcb = () => {};
+const conquercb = idcb;
 
 module.exports = {
     contraMap: contraMapcb,
     divide: dividecb,
-    conquer: conquercb
+    conquer: conquercb,
+    id: idcb
 };

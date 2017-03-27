@@ -1,10 +1,10 @@
 'use strict';
-const R = require('ramda');
+const utils = require('../utils.js');
 
 //CB x y :: x -> (cb y) -> IO ()
 
 //mapCB :: (y -> z) -> CB x y -> CB x z
-const mapCB = R.curry((fnyz, CBxy) => {
+const mapCB = utils.curry2((fnyz, CBxy) => {
     return CBify((x, cbz) => {
         CBxy(x, (err, y) => {
             if(err) return cbz(err);
@@ -28,7 +28,7 @@ const failCB = (err) => {
 };
 
 //apCB :: CB z (x -> y) -> CB z x -> CB z y
-const apCB = R.curry((CBzfnxy, CBzx) => {
+const apCB = utils.curry2((CBzfnxy, CBzx) => {
     return CBify((z, cby) => {
         CBzx(z, (err, x) => {
             if(err) return cby(err);
@@ -41,7 +41,7 @@ const apCB = R.curry((CBzfnxy, CBzx) => {
 });
 
 //chainCB :: (x -> CB z y) -> CB z x -> CB z y
-const chainCB = R.curry((fnxCBzy, CBzx) => {
+const chainCB = utils.curry2((fnxCBzy, CBzx) => {
     return CBify((z, cby) => {
         CBzx(z, (err, x) => {
             if(err) return cby(err);
@@ -51,7 +51,7 @@ const chainCB = R.curry((fnxCBzy, CBzx) => {
 });
 
 //composeCB :: CB x y -> CB y z -> CB x z
-const composeCB = R.curry((CBxy, CByz) => {
+const composeCB = utils.curry2((CBxy, CByz) => {
     return CBify((x, cbz) => {
         CBxy(x, (err, y) => {
             if(err) return cbz(err);
@@ -69,8 +69,9 @@ const createCB = (fnxy) => {
 
 //CBify :: classic-style CB x y -> CB x y
 //Used for interoperability with fantasy-land, ramda, etc
-const CBify = (classicCB) => {
-    const CB = R.curryN(2, classicCB);
+//Optional that argument for passing the function context.
+const CBify = (classicCB, that) => {
+    const CB = utils.curry2(classicCB, that);
     CB.map = fn => mapCB(fn, CB);
     CB.ap = CBfn => apCB(CBfn, CB);
     CB.chain = fnCB => chainCB(fnCB, CB);

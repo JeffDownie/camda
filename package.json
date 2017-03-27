@@ -1,6 +1,6 @@
 {
   "name": "camda",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Functional instances for node callbacks",
   "author": "Jeff Downie",
   "main": "src/index.js",
@@ -14,10 +14,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "ramda": "0.22.1"
+    "ramda": "0.23.0"
   },
   "devDependencies": {
-    "eslint": "3.11.1",
+    "eslint": "3.18.0",
     "istanbul": "0.4.5",
     "mocha": "3.2.0"
   }

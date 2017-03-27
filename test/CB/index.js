@@ -99,3 +99,19 @@ describe('chain', () => {
         CB.id.chain(x => CB.create(R.add(x)))(3, checkcb(done, 6));
     });
 });
+
+describe('CBify', () => {
+    it('should add functions to a classic callback', done => {
+        CB.CBify((x, cb) => cb(null, x)).map(y => y + 1)(2, checkcb(done, 3));
+    });
+
+    it('should pass through the that arg if specified', done => {
+        const thisObj = {
+            x: 5,
+            f: function(y, cb) {
+                cb(null, this.x + y);
+            }
+        };
+        CB.CBify(thisObj.f, thisObj)(2, checkcb(done, 7));
+    });
+});

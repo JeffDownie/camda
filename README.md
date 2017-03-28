@@ -2,6 +2,8 @@
 
 A library for extensions of classic node callback functions
 
+[![Build Status](https://travis-ci.org/JeffDownie/camda.svg?branch=master)](https://travis-ci.org/JeffDownie/camda)
+
 ## Examples
 
 ```

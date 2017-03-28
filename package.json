@@ -6,6 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "npm run lint && istanbul cover ./node_modules/.bin/_mocha",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "lint": "eslint ."
   },
   "repository": {
@@ -17,6 +18,7 @@
     "ramda": "0.23.0"
   },
   "devDependencies": {
+    "coveralls": "2.12.0",
     "eslint": "3.18.0",
     "istanbul": "0.4.5",
     "mocha": "3.2.0"

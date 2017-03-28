@@ -104,7 +104,6 @@ describe('CBify', () => {
     it('should add functions to a classic callback', done => {
         CB.CBify((x, cb) => cb(null, x)).map(y => y + 1)(2, checkcb(done, 3));
     });
-
     it('should pass through the that arg if specified', done => {
         const thisObj = {
             x: 5,
@@ -113,5 +112,23 @@ describe('CBify', () => {
             }
         };
         CB.CBify(thisObj.f, thisObj)(2, checkcb(done, 7));
+    });
+    it('should work when called as the root object', done => {
+        CB((x, cb) => cb(null, x)).map(y => y + 1)(2, checkcb(done, 3));
+    });
+});
+
+describe('parallel', () => {
+    it('should run a CB in parallel against a list', done => {
+        CB.parallel(CB.id)([1,2,3,4], checkcb(done, [1,2,3,4]));
+    });
+    it('should work when called as an instance method', done => {
+        CB.create(R.inc).parallel()([1,2,3], checkcb(done, [2,3,4]));
+    });
+    it('should fail if any of the CBs fail', done => {
+        CB.CBify((x, cb) => {if(x === 2) return cb('err'); cb(null, x);}).parallel()([0,1,2], checkErrcb(done, 'err'));
+    });
+    it('should fail if all of the CBs fail', done => {
+        CB.fail('err').parallel()([1,2,3], checkErrcb(done, 'err'));
     });
 });

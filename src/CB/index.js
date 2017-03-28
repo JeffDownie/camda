@@ -67,6 +67,30 @@ const createCB = (fnxy) => {
     });
 };
 
+//parallelCB :: CB x y -> CB [x] [y]
+const parallelCB = (CBxy) => {
+    return CBify((xs, cbys) => {
+        const length = xs.length;
+        if(length === 0) return cbys(null, []);
+        let ys = [];
+        let finalErr = null;
+        let called = 0;
+        const cby = (err, y) => {
+            if(err) {
+                finalErr = err;
+            } else if(!finalErr) {
+                ys.push(y);
+            }
+            if(++called !== length) return;
+            if(finalErr) return cbys(finalErr);
+            cbys(null, ys);
+        };
+        for(let i = 0; i < length; i++) {
+            CBxy(xs[i], cby);
+        }
+    });
+};
+
 //CBify :: classic-style CB x y -> CB x y
 //Used for interoperability with fantasy-land, ramda, etc
 //Optional that argument for passing the function context.
@@ -76,6 +100,7 @@ const CBify = (classicCB, that) => {
     CB.ap = CBfn => apCB(CBfn, CB);
     CB.chain = fnCB => chainCB(fnCB, CB);
     CB.compose = composeCB(CB);
+    CB.parallel = () => parallelCB(CB);
     CB['fantasy-land/map'] = CB.map;
     CB['fantasy-land/ap'] = CB.ap;
     CB['fantasy-land/chain'] = CB.chain;
@@ -88,14 +113,14 @@ const idCB = CBify((x, cbx) => {
     cbx(null, x);
 });
 
-module.exports = {
-    map: mapCB,
-    of: ofCB,
-    fail: failCB,
-    ap: apCB,
-    chain: chainCB,
-    compose: composeCB,
-    id: idCB,
-    create: createCB,
-    CBify: CBify
-};
+module.exports = CBify;
+module.exports.map = mapCB;
+module.exports.of = ofCB;
+module.exports.fail = failCB;
+module.exports.ap = apCB;
+module.exports.chain = chainCB;
+module.exports.compose = composeCB;
+module.exports.id = idCB;
+module.exports.create = createCB;
+module.exports.parallel = parallelCB;
+module.exports.CBify = CBify;

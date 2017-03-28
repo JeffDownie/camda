@@ -125,8 +125,11 @@ describe('parallel', () => {
     it('should work when called as an instance method', done => {
         CB.create(R.inc).parallel()([1,2,3], checkcb(done, [2,3,4]));
     });
+    it('should work on an empty array', done => {
+        CB.id.parallel()([], checkcb(done, []));
+    });
     it('should fail if any of the CBs fail', done => {
-        CB.CBify((x, cb) => {if(x === 2) return cb('err'); cb(null, x);}).parallel()([0,1,2], checkErrcb(done, 'err'));
+        CB.CBify((x, cb) => {if(x === 2) return cb('err'); cb(null, x);}).parallel()([0,1,2,3,4,5,6,7], checkErrcb(done, 'err'));
     });
     it('should fail if all of the CBs fail', done => {
         CB.fail('err').parallel()([1,2,3], checkErrcb(done, 'err'));

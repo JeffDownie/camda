@@ -3,6 +3,7 @@
 A library for extensions of classic node callback functions
 
 [![Build Status](https://travis-ci.org/JeffDownie/camda.svg?branch=master)](https://travis-ci.org/JeffDownie/camda)
+[![Coverage Status](https://coveralls.io/repos/github/JeffDownie/camda/badge.svg?branch=master)](https://coveralls.io/github/JeffDownie/camda?branch=master)
 
 ## Examples
 

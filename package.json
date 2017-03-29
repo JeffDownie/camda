@@ -1,6 +1,6 @@
 {
   "name": "camda",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Functional instances for node callbacks",
   "author": "Jeff Downie",
   "main": "src/index.js",

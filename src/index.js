@@ -1,5 +1,10 @@
 'use strict';
+const callee = require('./callee');
+const caller = require('./caller');
+
 module.exports = {
-    cb: require('./cb'),
-    CB: require('./CB')
+    callee: callee,
+    cb: callee,
+    caller: caller,
+    CB: caller
 };

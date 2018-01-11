@@ -1,6 +1,7 @@
 'use strict';
 const CB = require('../..').CB;
 const R = require('ramda');
+const Promise = require('promise');
 const assert = require('assert');
 
 const checkcb = (done, expectedData) => {
@@ -115,6 +116,18 @@ describe('CBify', () => {
     });
     it('should work when called as the root object', done => {
         CB((x, cb) => cb(null, x)).map(y => y + 1)(2, checkcb(done, 3));
+    });
+});
+
+describe('CBifyPromise', () => {
+    it('should allow the promise to be called as a CB successfully', done => {
+        CB.CBifyPromise(x => new Promise(fulfill => fulfill(x)))(1, checkcb(done, 1));
+    });
+    it('should allow the promise to be called as a CB and fail', done => {
+        CB.CBifyPromise(x => new Promise((fulfill, reject) => reject(x)))('err', checkErrcb(done, 'err'));
+    });
+    it('should add helper methods to the returned CB', done => {
+        CB.CBifyPromise(x => new Promise(fulfill => fulfill(x))).map(y => y + 3)(1, checkcb(done, 4));
     });
 });
 

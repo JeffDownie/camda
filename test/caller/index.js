@@ -81,7 +81,7 @@ describe('ap', () => {
         CB.ap(CB.create(R.add), CB.fail('fail'))(123, checkErrcb(done, 'fail'));
     });
     it('should work when called as an instance method', done => {
-        CB.id.ap(CB.of(R.identity))(3, checkcb(done, 3));
+        CB.of(R.identity).ap(CB.id)(3, checkcb(done, 3));
     });
 });
 

@@ -30,12 +30,12 @@ describe('map', () => {
 
 describe('ap', () => {
     it('should ap over a successful CB', done => {
-        R.ap(CB.create(R.inc), CB.of(R.inc))(0, checkcb(done, 2));
+        R.ap(CB.of(R.inc), CB.create(R.inc))(0, checkcb(done, 2));
     });
     it('should ap over a failed CB as the first argument', done => {
-        R.ap(CB.fail('err'), CB.of(R.inc))(0, checkErrcb(done, 'err'));
+        R.ap(CB.of(R.inc), CB.fail('err'))(0, checkErrcb(done, 'err'));
     });
     it('should ap over a failed CB as the second argument', done => {
-        R.ap(CB.create(R.inc), CB.fail('err'))(0, checkErrcb(done, 'err'));
+        R.ap(CB.fail('err'), CB.create(R.inc))(0, checkErrcb(done, 'err'));
     });
 });

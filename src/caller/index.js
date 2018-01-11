@@ -97,12 +97,12 @@ const parallelCB = (CBxy) => {
 const CBify = (classicCB, that) => {
     const CB = utils.curry2(classicCB, that);
     CB.map = fn => mapCB(fn, CB);
-    CB.ap = CBfn => apCB(CBfn, CB);
+    CB.ap = CBzx => apCB(CB, CBzx);
     CB.chain = fnCB => chainCB(fnCB, CB);
     CB.compose = composeCB(CB);
     CB.parallel = () => parallelCB(CB);
     CB['fantasy-land/map'] = CB.map;
-    CB['fantasy-land/ap'] = CB.ap;
+    CB['fantasy-land/ap'] = CBxfnyz => apCB(CBxfnyz, CB);
     CB['fantasy-land/chain'] = CB.chain;
     CB['fantasy-land/compose'] = CB.compose;
     return CB;

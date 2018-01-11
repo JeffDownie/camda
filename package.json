@@ -21,7 +21,8 @@
     "coveralls": "3.0.0",
     "eslint": "4.15.0",
     "istanbul": "0.4.5",
-    "mocha": "4.1.0"
+    "mocha": "4.1.0",
+    "promise": "8.0.1"
   },
   "contributors": [
     "Jeff Downie",

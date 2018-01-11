@@ -108,6 +108,17 @@ const CBify = (classicCB, that) => {
     return CB;
 };
 
+//CBifyPromise :: (x -> Promise y) -> CB x y
+const CBifyPromise = xPy => {
+    return CBify((x, cby) => {
+        xPy(x).then(y => {
+            cby(null, y);
+        }, err => {
+            cby(err);
+        });
+    });
+};
+
 //idCB :: CB x x
 const idCB = CBify((x, cbx) => {
     cbx(null, x);
@@ -124,3 +135,4 @@ module.exports.id = idCB;
 module.exports.create = createCB;
 module.exports.parallel = parallelCB;
 module.exports.CBify = CBify;
+module.exports.CBifyPromise = CBifyPromise;
